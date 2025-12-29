@@ -1,7 +1,58 @@
-import java.util.ArrayList;
-
 public class Player {
-    ArrayList<Player> player = new ArrayList<>();
-
     
+    private String playerName;
+    private String playersTeam;
+    private int playerStrength;
+    private int playerStamina;
+    private boolean injured;
+
+    Player(String playerName, int playerStrength, int playerStamina, boolean injured, String playersTeam){
+        this.playerName = playerName;
+        this.playerStrength = playerStrength;
+        this.playerStamina = playerStamina;
+        this.injured = injured;
+        this.playersTeam = playersTeam;
+    }
+
+    //setter
+    public void setPlayerName(String playerName){
+        this.playerName = playerName;
+    }
+
+    public void setPlayersTeam(String playersTeam){
+        this.playersTeam  = playersTeam;
+    }
+
+    public void setPlayerStrength(int playerStrength){
+        this.playerStrength = playerStrength;
+    }
+
+    public void setPlayerStamina(int playerStamina){
+        this.playerStamina = playerStamina;
+    }
+
+    public void setInjured(boolean injured){
+        this.injured = injured;
+    }
+
+    //getter
+    public String getPlayerName(){
+        return playerName;
+    }
+
+    public String getPlayersTeam(){
+        return playersTeam;
+    }
+
+    public int getPlayerStrength(){
+        return playerStrength;
+    }
+
+    public int getPlayerStamina(){
+        return playerStamina;
+    }
+
+    public boolean getInjured(){
+        return injured;
+    }
 }

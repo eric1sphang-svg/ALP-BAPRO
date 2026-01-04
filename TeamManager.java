@@ -353,7 +353,6 @@ public class TeamManager {
     }
 
     public void modifyPlayerStats(){
-        int indexTeam = 0;
         boolean loop = true;
         String teamName = "";
         while(loop){
@@ -361,7 +360,6 @@ public class TeamManager {
             teamName = sc.nextLine();
             for(int i = 0; i < teamArrList.size(); i++){
                 if(teamArrList.get(i).getTeamName().equalsIgnoreCase(teamName)){
-                    indexTeam = i;
                     loop = false;
                 }
             }
@@ -466,7 +464,6 @@ public class TeamManager {
     }
 
     public void adjustTactics(){
-        int indexTeam = 0;
         boolean loop = true;
         String teamName = "";
         while(loop){
@@ -474,7 +471,6 @@ public class TeamManager {
             teamName = sc.nextLine();
             for(int i = 0; i < teamArrList.size(); i++){
                 if(teamArrList.get(i).getTeamName().equalsIgnoreCase(teamName)){
-                    indexTeam = i;
                     loop = false;
                 }
             }
@@ -631,10 +627,6 @@ public class TeamManager {
     }
 
     private void startBattle(){
-        if (currentmatch >= match.size()){
-            System.out.println("All matches have been completed");
-            return;
-        }
         System.out.println("Match " + (currentMatch+1) + ":");
         System.out.println(match.get(currentMatch).getTeamA().getTeamName() + " vs " + match.get(currentMatch).getTeamB().getTeamName());
         boolean loop = true;
@@ -662,26 +654,39 @@ public class TeamManager {
 
         match.get(currentMatch).getTeamA().setTeamPower(playerArrList, teamAName);
         match.get(currentMatch).getTeamB().setTeamPower(playerArrList, teamBName);
-        Team teamA = match.get(currentMatch).getTeamA();
-        Team teamB = match.get(currentMatch).getTeamB();
         
         System.out.println(teamAName + " (" + teamAPower + ") VS " + teamBName + " (" + teamBPower+ ")");
 
         int powerDiff = match.get(currentMatch).getTeamA().getTeamPower() - match.get(currentMatch).getTeamB().getTeamPower();
         if(powerDiff < 0){
             System.out.println("Team " + teamBName + " wins! Score +2");
-            teamB.setTeamWins();
-            teamA.setTeamLoses();
+            for(Team team : teamArrList){
+                if(team.getTeamName().equalsIgnoreCase(teamBName)){
+                    team.setTeamWins();
+                    team.setTeamLoses();
+                }
             }
             
         } else if(powerDiff == 0){
             System.out.println("Draw! Score +1 for both teams!");
-    teamA.setTeamDraw();
-    teamB.setTeamDraw();
+            for(Team team : teamArrList){
+                if(team.getTeamName().equalsIgnoreCase(teamBName)){
+                    team.setTeamDraw();
+                }
+            }
+            for(Team team : teamArrList){
+                if(team.getTeamName().equalsIgnoreCase(teamAName)){
+                    team.setTeamDraw();
+                }
+            }
         } else{
             System.out.println("Team " + teamAName + " wins! Score +2");
-            teamA.setTeamWins();
-            teamB.setTeamLoses();
+            for(Team team : teamArrList){
+                if(team.getTeamName().equalsIgnoreCase(teamAName)){
+                    team.setTeamWins();
+                    team.setTeamLoses();
+                }
+            }
         }
 
         currentMatch += 1;

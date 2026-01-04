@@ -28,9 +28,7 @@ public class Team {
                 totalStamina += playerArrList.get(i).getPlayerStamina();
             }
         }
-        totalStrength *= 0.8;
-        totalStamina *= 0.2;
-        this.teamPower = totalStrength + totalStamina;
+        this.teamPower = (int)(totalStrength*0.8) + (int)(totalStamina*0.2);
     }
     public void setTeamWins(){
         this.teamWins++;

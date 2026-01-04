@@ -9,7 +9,7 @@ public class TeamManager {
     static boolean playerpass = true;
     static boolean maxfixture = false;
     static boolean sudahpunyataktik=false;
-    static int matchaicounter=0;
+    static int matchaicounter = 0;
 
     Scanner sc = new Scanner(System.in);
     Random rand = new Random();
@@ -724,6 +724,11 @@ public class TeamManager {
         System.out.println("=== The Sports League has BEGUN! ===");
         showTeams();
 
+        if (!maxfixture) {
+            System.out.println("Match Fixture: ");
+            matchFixture();
+        }
+
         boolean outerLoop = true;
         while (outerLoop) {
             boolean loop = true;
@@ -737,23 +742,16 @@ public class TeamManager {
                 System.out.println("5. Save & Exit");
                 System.out.println("==========================");
                 try {
-                    System.out.print("Choose an Option");
+                    System.out.print("Choose an Option: ");
                     choice = sc.nextInt();
                     sc.nextLine();
-                    if (choice <1 || choice > 4){
+                    if (choice < 1 || choice > 5){
                         System.out.println("Invalid Option! Try again!");
                     } else {
-                        if (!maxfixture) {
-                            if (choice > 2) {
-                                System.out.println("No Standings yet, Run Fixture First");
-                            } else {
-                                loop=false;
-                            }
-                        } else {
-                            loop=false;
-                        }
+                        loop = false;
                     }
                 } catch (Exception e) {
+                    sc.nextLine();
                     System.out.println("Invalid Option! Try again!");
                 }
             }
@@ -771,12 +769,18 @@ public class TeamManager {
                     break;
 
                 case 4:
+                    if (currentMatch >= match.size()) {
+                        System.out.println("All matches have been completed!\n");
+                        break;
+                    }
+                    
                     battleAI();
                     startBattle();
                     break;
 
                 case 5:
                     saveProgress();
+                    System.exit(0);
                     break;
 
                 default:
@@ -886,94 +890,113 @@ public class TeamManager {
         System.out.println("Do you want to play VS AI?");
         String pilih = sc.next() + sc.nextLine();
 
-        String timUser="";
-        if (pilih.equalsIgnoreCase("Yes")) {
-            System.out.println("You have to choose your best team: ");
-            for (int i = 0; i < teamArrList.size(); i++) {
-                System.out.println((i + 1) + ". " + teamArrList.get(i).getTeamName());
-            }
+        if (!pilih.equalsIgnoreCase("Yes")) {
+            return;
+        }
 
-            boolean ulang = true;
-            while (ulang) {
-                try {
-                    System.out.print("Choose your team: ");
-                    String pilihTim = sc.next() + sc.nextLine();
-                    boolean ulangs = true;
-                    for (int i = 0; i < teamArrList.size(); i++) {
-                        if (pilihTim.equalsIgnoreCase(teamArrList.get(i).getTeamName())) {
-                            ulangs = false;
-                            System.out.println("Team has been selected");
-                            timUser = teamArrList.get(i).getTeamName();
-                        }
+        String timUser = "";
+        Team userTeam = null;
+        
+        System.out.println("You have to choose your best team: ");
+        for (int i = 0; i < teamArrList.size(); i++) {
+            System.out.println((i + 1) + ". " + teamArrList.get(i).getTeamName());
+        }
+
+        boolean ulang = true;
+        while (ulang) {
+            try {
+                System.out.print("Choose your team: ");
+                String pilihTim = sc.next() + sc.nextLine();
+                boolean ulangs = true;
+                for (int i = 0; i < teamArrList.size(); i++) {
+                    if (pilihTim.equalsIgnoreCase(teamArrList.get(i).getTeamName())) {
+                        ulangs = false;
+                        System.out.println("Team has been selected");
+                        timUser = teamArrList.get(i).getTeamName();
+                        userTeam = teamArrList.get(i);
                     }
-                    if (ulangs) {
-                        System.out.println("Team not found! Try again!\n");
-                    } else {
-                        ulang = false;
-                    }
-                } catch (Exception c) {
-                    System.out.println("Invalid Input! Try again!");
                 }
-            }
-
-            boolean salah = true;
-            String choice= "";
-            while (salah) {
-                System.out.println("Pilih difficulty:\nEasy\nModerate\nHard");
-                choice = sc.next() + sc.nextLine();
-                if (choice.equalsIgnoreCase("easy") || choice.equalsIgnoreCase("moderate") || choice.equalsIgnoreCase("hard")) {
-                    salah = false;
-                    choice.toLowerCase();
+                if (ulangs) {
+                    System.out.println("Team not found! Try again!\n");
+                } else {
+                    ulang = false;
                 }
-            }
-
-            int aiStrength = 0;
-            int aiStamina = 0;
-            int aiPower = 0;
-            int aiStrats = 0;
-            String aiTeamName = "";
-                switch (choice) {
-                    case "easy":
-                        aiTeamName = "AI FC EASY";
-                        for (int i = 0; i < 11; i++){
-                            aiStrength += rand.nextInt(1,26);
-                            aiStamina += rand.nextInt(50,91);
-                        }
-                        aiStrats = rand.nextInt(250,260);
-                        break;
-                    case "moderate":
-                        aiTeamName = "AI FC MODERATE";
-                        for (int i = 0; i < 11; i++){
-                            aiStrength += rand.nextInt(26,76);
-                            aiStamina += rand.nextInt(91,151);
-                        }
-                        aiStrats = rand.nextInt(300,371);
-                        break;
-                    case "hard":
-                        aiTeamName = "AI FC HARDCORE";
-                        for (int i = 0; i < 11; i++){
-                            aiStrength += rand.nextInt(76,101);
-                            aiStamina += rand.nextInt(151,201);
-                        }
-                        aiStrats = rand.nextInt(371,401);
-                        break;
-                }
-                aiPower = (int)(aiStrength * 0.8) + (int)(aiStamina * 0.2);
-                aiPower = (int)(aiPower * 0.6) + (int)(aiStrats * 0.4);
-
-            System.out.println("You are facing " + aiTeamName);
-            matchAI.get(matchaicounter).getTeamA().setTeamPower(playerArrList, timUser);
-
-            int userpower = match.get(matchaicounter).getTeamA().getTeamPower();
-            int statspowerA = match.get(currentMatch).getTeamA().getStatspower();
-
-            userpower = (int)(userpower * 0.6) + (int)(statspowerA * 0.4);
-            if (userpower < aiPower) {
-                System.out.println("Unfortunately you are beaten by " + aiTeamName);
-            } else if (userpower > aiPower) {
-                System.out.println("YOU BEAT " + aiTeamName + "!!!");
+            } catch (Exception c) {
+                System.out.println("Invalid Input! Try again!");
             }
         }
+
+        boolean salah = true;
+        String choice = "";
+        while (salah) {
+            System.out.println("Pilih difficulty:\nEasy\nModerate\nHard\nChoose:");
+            choice = sc.next() + sc.nextLine();
+            if (choice.equalsIgnoreCase("easy") || choice.equalsIgnoreCase("moderate") || choice.equalsIgnoreCase("hard")) {
+                salah = false;
+                choice = choice.toLowerCase();
+            }
+        }
+
+        int aiStrength = 0;
+        int aiStamina = 0;
+        int aiPower = 0;
+        int aiStrats = 0;
+        String aiTeamName = "";
+        
+        switch (choice) {
+            case "easy":
+                aiTeamName = "AI FC EASY";
+                for (int i = 0; i < 11; i++){
+                    aiStrength += rand.nextInt(1, 26);
+                    aiStamina += rand.nextInt(50, 91);
+                }
+                aiStrats = rand.nextInt(250, 260);
+                break;
+            case "moderate":
+                aiTeamName = "AI FC MODERATE";
+                for (int i = 0; i < 11; i++){
+                    aiStrength += rand.nextInt(26, 76);
+                    aiStamina += rand.nextInt(91, 151);
+                }
+                aiStrats = rand.nextInt(300, 371);
+                break;
+            case "hard":
+                aiTeamName = "AI FC HARDCORE";
+                for (int i = 0; i < 11; i++){
+                    aiStrength += rand.nextInt(76, 101);
+                    aiStamina += rand.nextInt(151, 201);
+                }
+                aiStrats = rand.nextInt(371, 401);
+                break;
+        }
+        
+        aiPower = (int)(aiStrength * 0.8 + aiStamina * 0.2);
+        aiPower = (int)(aiPower * 0.6 + aiStrats * 0.4);
+
+        Team aiTeam = new Team(aiTeamName, 0);
+        aiTeam.setStatspower(aiStrats);
+
+        matchAI.add(new Battle(userTeam, aiTeam));
+
+        System.out.println("You are facing " + aiTeamName);
+
+        matchAI.get(matchaicounter).getTeamA().setTeamPower(playerArrList, timUser);
+        int userpower = matchAI.get(matchaicounter).getTeamA().getTeamPower();
+        int statspowerA = matchAI.get(matchaicounter).getTeamA().getStatspower();
+        userpower = (int)(userpower * 0.6 + statspowerA * 0.4);
+        
+        System.out.println(timUser + " Power: " + userpower);
+        System.out.println(aiTeamName + " Power: " + aiPower);
+        
+        if (userpower < aiPower) {
+            System.out.println("Unfortunately you are beaten by " + aiTeamName);
+        } else if (userpower > aiPower) {
+            System.out.println("YOU BEAT " + aiTeamName + "!!!");
+        } else {
+            System.out.println("It's a DRAW!");
+        }
+
+        matchaicounter++;
     }
 
     public void playercounter(){

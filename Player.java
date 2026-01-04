@@ -4,6 +4,7 @@ public class Player {
     private String playersTeam;
     private int playerStrength;
     private int playerStamina;
+    private int trained;
     private boolean injured;
 
     Player(String playerName, int playerStrength, int playerStamina, boolean injured, String playersTeam){
@@ -35,6 +36,10 @@ public class Player {
         this.injured = injured;
     }
 
+    public void setTrained(){
+        trained++;
+    }
+
     //getter
     public String getPlayerName(){
         return playerName;
@@ -55,4 +60,9 @@ public class Player {
     public boolean getInjured(){
         return injured;
     }
+    
+    public int getTrained(){
+        return trained;
+    }
+    
 }

@@ -8,6 +8,8 @@ public class Team {
     private int teamWins;
     private int teamLoses;
     private int teamDraw;
+    private int stratspower;
+    private boolean punyastrats;
 
     Team(String teamName, int teamScore){
         this.teamName = teamName;
@@ -16,6 +18,18 @@ public class Team {
         this.teamWins = 0;
         this.teamLoses = 0;
         this.teamDraw = 0;
+        this.stratspower = 0;
+    }
+
+    Team(String teamName, int teamScore, int teamWins, int teamLoses, int teamDraw, int stratspower, boolean punyastrats){
+    this.teamName = teamName;
+    this.teamScore = teamScore;
+    this.teamWins = teamWins;
+    this.teamLoses = teamLoses;
+    this.teamDraw = teamDraw;
+    this.stratspower = stratspower;
+    this.punyastrats = punyastrats;
+    this.teamPower = 0;
     }
 
     //setter
@@ -28,6 +42,8 @@ public class Team {
                 totalStamina += playerArrList.get(i).getPlayerStamina();
             }
         }
+        totalStrength *= 0.8;
+        totalStamina *= 0.2;
         this.teamPower = (int)(totalStrength*0.8) + (int)(totalStamina*0.2);
     }
     public void setTeamWins(){
@@ -40,6 +56,9 @@ public class Team {
     public void setTeamDraw(){
         this.teamDraw++;
         this.teamScore++;
+    }
+    public void setStatspower(int stratspower){
+        this.stratspower = stratspower;
     }
 
     //getter
@@ -60,5 +79,14 @@ public class Team {
     }
     public int getTeamDraw(){
         return teamDraw;
+    }
+    public int getStatspower(){
+        return stratspower;
+    }
+    public void sudahstrats(){
+        punyastrats = true;
+    }
+    public boolean strats(){
+        return punyastrats;
     }
 }
